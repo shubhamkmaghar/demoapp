@@ -1,0 +1,219 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:http/http.dart' as http;
+
+import '../const/app_urls.dart';
+import '../const/get_storage_const.dart';
+
+
+class DemoUserApiService extends GetxController {
+  final String _baseURL = AppUrls.baseUrl;
+  String? registeredToken;
+
+  Future<String?> _getRegisteredToken() async {
+    registeredToken = GetStorage().read(token);
+    return registeredToken;
+  }
+
+  Future<Map<String, String>> get getHeaders async {
+    return {
+        'user-auth-token':
+        (registeredToken ?? await _getRegisteredToken()).toString()
+      };
+  }
+
+
+  Future<dynamic> getApiCall({
+    required String endPoint,
+  }) async {
+    log('URL :: $endPoint  -- ${await getHeaders}');
+    try {
+      final response = await http.get(Uri.https(_baseURL, endPoint),
+          headers: await getHeaders);
+
+  return await _response(response,
+      url: Uri.https(_baseURL, endPoint).toString(),);
+
+
+
+    } on SocketException {
+      log('SocketException Happened');
+    } catch (e) {
+      log('Error : ${e.toString()}');
+    }
+    return null;
+  }
+
+
+  Future<dynamic>  getApiCallWithURL({
+    required String endPoint,
+  }) async {
+    log('URL :: $endPoint , Token :: ${await getHeaders}');
+
+    try {
+      final response = await http.get(
+          Uri.parse(
+            endPoint,
+          ),
+          headers: await getHeaders);
+      return await _response(response,
+          url: Uri.parse(endPoint).toString(),);
+    } on SocketException {
+      log('SocketException Happened');
+    } catch (e) {
+      log('Error : ${e.toString()}');
+    }
+    return {'message': 'failure'};
+  }
+
+  Future<dynamic> postApiCall(
+      {required String endPoint,
+      required Map<String, dynamic> bodyParams,
+        bool fromLogin=false,
+      }) async {
+    log('URL :: $endPoint ---- Model :: ${bodyParams.toString()} -- ${fromLogin?'':await getHeaders}');
+
+    try {
+      final response = await http.post(
+        Uri.parse(endPoint),
+        body: bodyParams,
+        headers: fromLogin?{}:await getHeaders,
+      );
+      return await _response(response,
+          url: Uri.parse(endPoint,).toString());
+    } on SocketException {
+      log('SocketException Happened');
+    } catch (e) {
+      log('Error : ${e.toString()}');
+    }
+    return {'message': 'failure'};
+  }
+
+  Future<dynamic> putApiCall({
+    required String endPoint,
+    required Map<String, dynamic> bodyParams,
+  }) async {
+    log('URL :: $endPoint ---- Model :: ${bodyParams.toString()} -- ${await getHeaders}');
+    try {
+      final response = await http.put(
+        Uri.parse(endPoint),
+        headers: await getHeaders,
+        body: bodyParams,
+      );
+
+      return await _response(response,
+          url: Uri.parse(endPoint).toString(),);
+    } on SocketException {
+      log('SocketException Happened');
+    } catch (e) {
+      log('Error : ${e.toString()}');
+    }
+    return {'message': 'failure'};
+  }
+
+  dynamic deleteApiCall({required String endPoint}) async {
+    try {
+      final response = await http.delete(
+        Uri.https(_baseURL, endPoint),
+        headers: await getHeaders,
+      );
+
+      if (response.statusCode == 200) {
+        if (response.body.isNotEmpty) {
+          log('Logout Res ::  ${response.body}');
+          return true;
+        }
+      }
+    } on SocketException {
+      log('SocketException Happened');
+    } catch (e) {
+      log('Error : ${e.toString()}');
+    }
+    return {'message': 'failure'};
+  }
+
+  dynamic _response(http.Response response,
+      {String? url,}) async {
+    log('Status Code :: ${response.statusCode} -- $url    ${response.body}');
+    switch (response.statusCode) {
+      case 200:
+        log('Response Data :: ${response.body}');
+        return response.body.isNotEmpty
+            ? json.decode(response.body)
+            : {'message': 'failure'};
+      case 400:
+        return _getErrorResponse(json.decode(response.body));
+      case 401:
+/*
+        //SharedPreferenceUtil shared = SharedPreferenceUtil();
+
+       // await Workmanager().cancelAll();
+
+        bool deletedAllValues = await shared.clearAll();
+
+        // Navigator.of(context!).pop();
+
+        if (deletedAllValues) {
+
+         return Navigator.of(context).pushNamedAndRemoveUntil(
+              AppRoutes.loginPage, (route) => false);
+        } else {
+          return _getErrorResponse(json.decode(response.body));
+        }
+        */
+
+      case 402:
+        return _getErrorResponse(json.decode(response.body));
+      case 403:
+        return _getErrorResponse(json.decode(response.body));
+      case 404:
+        return _getErrorResponse(json.decode(response.body));
+      case 405:
+        return _getErrorResponse(json.decode(response.body));
+      case 415:
+        return _getErrorResponse(json.decode(response.body));
+      case 500:
+        return _getErrorResponse(json.decode(response.body));
+      case 501:
+        return _getErrorResponse(json.decode(response.body));
+      case 502:
+        return _getErrorResponse(json.decode(response.body));
+      default:
+        return _getErrorResponse(json.decode(response.body));
+    }
+  }
+
+  Map<String, dynamic> _getErrorResponse(decode) {
+    final error = decode as Map<String, dynamic>;
+    log(error.toString());
+    return {'message': 'failure '+ error['message']};
+  }
+
+  Future<dynamic> getApiCallWithoutHeaders({
+    required String endPoint,
+    //required Map<String, dynamic> queryParams,
+   // required Map<String, String> headers,
+  }) async {
+
+    log('URL :: $endPoint ');
+
+    try {
+      final response =  await http.get(
+        Uri.parse(
+          endPoint,
+        ),
+          );
+
+      return await _response(response,
+          url: Uri.https(endPoint).toString());
+    } on SocketException {
+      log('SocketException Happened');
+    } catch (e) {
+      log('Error : ${e.toString()}');
+    }
+    return {'message': 'failure'};
+  }
+}
