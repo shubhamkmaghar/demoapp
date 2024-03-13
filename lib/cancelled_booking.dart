@@ -178,7 +178,7 @@ amountRefendedData(),
               color: AppColors.barColor,
               fontWeight: FontWeight.w400),
         ),
-            SizedBox(height: Get.width*0.02,),
+            SizedBox(height: Get.width*0.03,),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -204,7 +204,7 @@ amountRefendedData(),
                     fontWeight: FontWeight.w400),
               )),
         ]),
-        SizedBox(height: Get.width*0.02,),
+        SizedBox(height: Get.width*0.03,),
         Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -229,7 +229,7 @@ amountRefendedData(),
                         fontWeight: FontWeight.w400),
                   )),*/
             ]),
-            SizedBox(height: Get.width*0.02,),
+            SizedBox(height: Get.width*0.03,),
         Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
