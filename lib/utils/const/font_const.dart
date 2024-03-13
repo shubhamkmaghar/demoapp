@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 fontStylePlusJakarta(
     {Color? color,
@@ -16,3 +17,5 @@ fontStylePlusJakarta(
       height: height,
       decoration: decoration);
 }
+
+const poppinsStyle = GoogleFonts.poppins;

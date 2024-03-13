@@ -1,6 +1,5 @@
+import 'package:demoapp/utils/const/color.dart';
 import 'package:flutter/material.dart';
-
-import 'color_const.dart';
 
 class TextStyles {
   TextStyles();
@@ -13,7 +12,7 @@ class TextStyles {
 
   static TextStyle errorStyle = const TextStyle(fontWeight: FontWeight.w400, fontSize: 12.0, color: Colors.red);
 
-  static TextStyle hintStyle = const TextStyle(color: greyColor, fontSize: 14.0, fontWeight: FontWeight.w500);
+  static TextStyle hintStyle = TextStyle(color: AppColors.greyColor, fontSize: 14.0, fontWeight: FontWeight.w500);
 }
 
 class BorderStyles {
@@ -27,12 +26,12 @@ class BorderStyles {
     ),
   );
 
-  static const OutlineInputBorder auctionTextFieldBorderStyle = OutlineInputBorder(
+  static  OutlineInputBorder auctionTextFieldBorderStyle = OutlineInputBorder(
     borderRadius: BorderRadius.all(
       Radius.circular(50.0),
     ),
     borderSide: BorderSide(
-      color: greyColor,
+      color: AppColors.greyColor,
       width: 0.0,
     ),
   );
